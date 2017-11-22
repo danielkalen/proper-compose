@@ -9,4 +9,4 @@ resolveEnv = (composeFile)->
 	extend {}, process.env, require('mountenv').get(dirname)
 
 
-module.exports = memoize(resolveEnv)
+module.exports = if process.env.NO_MEMOIZE then resolveEnv else memoize(resolveEnv)

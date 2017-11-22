@@ -1,4 +1,4 @@
-module.exports = ///^
+module.exports = ///
 	(
 		[\ \t\r=]* 			# prior whitespace
 	)
@@ -7,4 +7,4 @@ module.exports = ///^
 	['"]
 	(.+?)
 	['"]
-$///gm
+///gm

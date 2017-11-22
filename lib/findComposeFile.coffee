@@ -3,7 +3,7 @@ fs = require 'fs-jetpack'
 Path = require 'path'
 
 resolveComposeFile = (cwd)->
-	cwd ?= process.cwd()
+	cwd ?= process.env.COMPOSE_DIR or process.cwd()
 	
 	Promise.resolve()
 		.then ()-> fs.listAsync(cwd)
