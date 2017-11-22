@@ -16,24 +16,25 @@ exports.services = ()->
 		.then ({cwd, composeFile})->
 			Promise.resolve(composeFile)
 				.then require './parseComposeFile'
-				.then (parsed)-> Object.keys(parsed.services)
+				.then (parsed)-> require('./resolveServices')(parsed, composeFile)
 
 
 exports.command = (args)->
 	Promise.resolve()
 		.then findComposeFile
 		.tap (result)->
+			result.env = require('./resolveEnv')(result.composeFile)
 			Promise.resolve(result.composeFile)
 				.then require './parseComposeFile'
 				.then (parsed)-> result.parsed = parsed
 				.return result
 		
-		.then ({cwd, composeFile, parsed})->
+		.then ({cwd, env, composeFile, parsed})->
 			Promise.resolve(parsed)
 				.then require './tempComposeFile'
 				.then (tempFile)->
 					args = ['-f',tempFile,'--project-directory',cwd].concat(args)
-					task = require('execa') compose, args, {cwd, stdio:'inherit'}
+					task = require('execa') compose, args, {cwd, env, stdio:'inherit'}
 					
 					Promise.resolve()
 						.then ()-> require('p-event')(task, 'exit')

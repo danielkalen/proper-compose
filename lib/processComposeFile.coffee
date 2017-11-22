@@ -6,27 +6,25 @@ EXPRESSION_REGEX = /\{\{(.+?)\}\}/g
 ENV_VAR_REGEX = /\$(\w+)/g
 
 
-module.exports = (data, composeFile)->	
-	Promise.resolve(composeFile)
-		.then require './resolveEnv'
-		.then (env)->
-			meta = {env, composeFile}
-			
-			Object.keys(data.services).forEach (name)->
-				config = data.services[name]
-				
-				if config.production? then switch
-					when config.production and not isInProduction
-						return delete data.services[name]
-					when not config.production and isInProduction
-						return delete data.services[name]
+module.exports = (data, composeFile)->
+	env = require('./resolveEnv')(composeFile)
+	meta = {env, composeFile}
+	
+	Object.keys(data.services).forEach (name)->
+		config = data.services[name]
+		
+		if config.production? then switch
+			when config.production and not isInProduction
+				return delete data.services[name]
+			when not config.production and isInProduction
+				return delete data.services[name]
 
-				if config.disabled
-					return delete data.services[name]
+		if config.disabled
+			return delete data.services[name]
 
-				data.services[name] = resolveExpressions(config, meta)
+		data.services[name] = resolveExpressions(config, meta)
 
-		.return data
+	return data
 
 
 
