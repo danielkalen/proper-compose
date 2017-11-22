@@ -1,4 +1,4 @@
-Promise = require 'bluebird'
+Promise = require('bluebird').config(warnings:false, longStackTraces:false)
 fs = require 'fs-jetpack'
 compose = require('which').sync 'docker-compose'
 
@@ -22,8 +22,8 @@ exports.services = ()->
 exports.command = (args)->
 	Promise.resolve()
 		.then findComposeFile
-		.tap (result={composeFile})->
-			Promise.resolve(composeFile)
+		.tap (result)->
+			Promise.resolve(result.composeFile)
 				.then require './parseComposeFile'
 				.then (parsed)-> result.parsed = parsed
 				.return result
@@ -32,7 +32,7 @@ exports.command = (args)->
 			Promise.resolve(parsed)
 				.then require './tempComposeFile'
 				.then (tempFile)->
-					args = args.concat ['-f',tempFile]
+					args = ['-f',tempFile,'--project-directory',cwd].concat(args)
 					task = require('execa') compose, args, {cwd, stdio:'inherit'}
 					
 					Promise.resolve()

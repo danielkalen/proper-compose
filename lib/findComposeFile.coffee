@@ -7,10 +7,10 @@ resolveComposeFile = (cwd)->
 	
 	Promise.resolve()
 		.then ()-> fs.listAsync(cwd)
-		.then (lisitng)-> matchComposeFile(listing, cwd)
-		.then (match)->
-			if match
-				return {cwd, found:true, composeFile:Path.join(cwd, match)}
+		.then (listing)-> matchComposeFile(listing, cwd)
+		.then (composeFile)->
+			if composeFile
+				return {cwd, composeFile, found:true}
 			
 			if (nextDir = Path.dirname(cwd)) is cwd # '/'
 				return {found:false}
@@ -18,7 +18,7 @@ resolveComposeFile = (cwd)->
 				return resolveComposeFile(nextDir)
 
 
-matchComposeFile = (listing)->
+matchComposeFile = (listing, cwd)->
 	if listing.includes('docker-compose.yml')
 		return Path.join(cwd, 'docker-compose.yml')
 	

@@ -12,7 +12,7 @@ module.exports = (data, composeFile)->
 		.then (env)->
 			meta = {env, composeFile}
 			
-			Object.keys(data.services).then (name)->
+			Object.keys(data.services).forEach (name)->
 				config = data.services[name]
 				
 				if config.production? then switch
@@ -36,7 +36,9 @@ resolveExpressions = (config, meta)->
 			config.map (item)-> resolveExpressions(item, meta)
 		
 		when typeof config is 'object'
-			resolveExpressions(config, meta)
+			output = {}
+			output[key] = resolveExpressions(value, meta) for key,value of config
+			return output
 		
 		when typeof config is 'number'
 			return config
@@ -48,7 +50,7 @@ resolveExpressions = (config, meta)->
 
 
 runAllExpressions = (string, meta)->
-	config.replace EXPRESSION_REGEX, (e,expression)->
+	string.replace EXPRESSION_REGEX, (e,expression)->
 		expression = expression.replace ENV_VAR_REGEX, (e, variable)-> "env.#{variable}"
 		runExpression(expression, meta)
 
