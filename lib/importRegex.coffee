@@ -1,12 +1,10 @@
-module.exports = 
-	///^
-		(
-			[\ \t\r=]* 			# prior whitespace
-		)
-		\b
-		import
-		\b
-		['"]
-		(.+?)
-		['"]
-	$///gm
+module.exports = ///^
+	(
+		[\ \t\r=]* 			# prior whitespace
+	)
+	import
+	\s
+	['"]
+	(.+?)
+	['"]
+$///gm
