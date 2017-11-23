@@ -3,7 +3,7 @@ fs = require 'fs-jetpack'
 indentString = require 'indent-string'
 Path = require 'path'
 stringReplace = require 'string-replace-async'
-IMPORT_REGEX = require './importRegex'
+IMPORT_REGEX = require('./regex').import
 
 resolveImports = (content, composeFile)->
 	context = Path.dirname composeFile
@@ -16,10 +16,6 @@ resolveImports = (content, composeFile)->
 			.then ()-> fs.readAsync path
 			.then (childContent)-> resolveImports childContent, path
 			.then (result)-> indentString(result, 1, indent:whitespace)
-				# result
-				# 	.split '\n'
-				# 	.map (line)-> "#{whitespace}#{line}"
-				# 	.join '\n'
 
 
 

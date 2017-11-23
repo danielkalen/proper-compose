@@ -220,14 +220,18 @@ suite "proper-compose", ()->
 					services:
 						abc:
 							image: abc
+							{{if ($INCLUDE_EXTRA) `import './extra'`}}
 						
-						{{if ($INCLUDE_DEF)
-							`import './extra'`
-						}}
+						{{if ($INCLUDE_EXTRA) `import './def'`}}
 				"""
 				'eval4/docker-compose/extra.yml': """
+					extra:
+						meta: 'ABC'
+				"""
+				'eval4/docker-compose/def.yml': """
 					def:
 						image: def
+						meta: DEF
 				"""
 
 
@@ -278,7 +282,7 @@ suite "proper-compose", ()->
 					]
 
 
-		test.skip "can be mixed with imports", ()->
+		test "can be mixed with imports", ()->
 			process.env.COMPOSE_DIR = "#{TEMP}/eval4"
 			Promise.resolve()
 				.then ()-> compose.services()
@@ -288,17 +292,17 @@ suite "proper-compose", ()->
 						id: undefined
 						config: {image:'abc'}
 					]
-				.then ()-> process.env.INCLUDE_DEF = true
+				.then ()-> process.env.INCLUDE_EXTRA = true
 				.then ()-> compose.services()
 				.then (result)->
 					expect(result).to.eql [
 						name: 'eval4_abc_1'
 						id: undefined
-						config: {image:'abc'}
+						config: {image:'abc', extra:meta:'ABC'}
 					,
 						name: 'eval4_def_1'
 						id: undefined
-						config: {image:'def'}
+						config: {image:'def', meta:'DEF'}
 					]
 
 
