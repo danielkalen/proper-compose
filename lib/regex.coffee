@@ -1,6 +1,5 @@
 exports.env_var = /\$(\w+)/g
 
-exports.expression = /\{\{([\w\W]+?)\}\}/g
 exports.expression = ///
 	(
 		[\ \t\r=]* 			# prior whitespace
