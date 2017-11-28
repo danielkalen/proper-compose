@@ -12,6 +12,9 @@ Features:
 - auto loads `.env.dev` when `NODE_ENV === 'development'` (in addition)
 - auto loads `.env.prod` when `NODE_ENV === 'production'` (in addition)
 - auto loads `.env.test` when `NODE_ENV === 'test'` (in addition)
+- extra commands/functionality
+    - `proper-compose *services*` for a summary of all matching services
+    - `proper-compose *stats*` for real-time service stats
 
 Note: this library is still under development stage and is being processed through heavy real-world battle testing. Full documentation will be released once this module is ready for alpha release.
 
