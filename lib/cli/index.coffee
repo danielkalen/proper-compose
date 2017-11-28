@@ -3,7 +3,6 @@ table = require './table'
 chalk = require 'chalk'
 args = require('minimist')(process.argv.slice(2))
 throttle = require 'sugar/function/throttle'
-values = require 'sugar/object/values'
 
 isCommand = (target)-> switch target
 	when 'help'
@@ -43,7 +42,7 @@ switch
 				columns = ['NAME:name', 'ID:id', 'CPU %:cpuPercent', 'RAM %:ramPercent', 'RAM USAGE:ramUsage', 'NET:netio', 'FS:fsio', 'PIDS:pids']
 				columnWidths = [13, 14, 8, 8, 20, 20, 20, 6]
 				require('../stats')(services).on 'update', (stats)->
-					stats = values(stats)
+					return console.log(JSON.stringify stats) if args.json
 					stats.forEach (stat)-> stat.name = if stat.online then chalk.green(stat.name) else chalk.yellow(stat.name)
 					if args.a or args.all
 						stats = require('sugar/array/sortBy')(stats, 'online', true)

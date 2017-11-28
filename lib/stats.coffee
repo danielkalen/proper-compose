@@ -1,6 +1,6 @@
 EventEmitter = require 'events'
 docker = require 'docker-promise'
-throttle = require 'sugar/function/throttle'
+values = require 'sugar/object/values'
 bytes = require 'sugar/number/bytes'
 formatNumber = require 'sugar/number/format'
 
@@ -35,7 +35,7 @@ watchStats = (services)->
 			watcher = new StatsWatcher(service)
 			watcher.on 'update', (data)->
 				stats[service.id] = data				
-				emitter.emit 'update', stats
+				emitter.emit 'update', values(stats)
 
 	return emitter
 
