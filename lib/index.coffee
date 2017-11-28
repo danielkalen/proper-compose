@@ -4,7 +4,9 @@ fs = require 'fs-jetpack'
 exports.getFile = ()->
 	require('./findComposeFile')(null, false)
 
-exports.services = (onlyActive)->
+exports.services = (options={})->
+	options.nicename ?= true
+	
 	Promise.resolve()
 		.then require './findComposeFile'
 		.then ({cwd, composeFile})->
@@ -12,12 +14,14 @@ exports.services = (onlyActive)->
 				.then require './parseComposeFile'
 				.then (parsed)-> require('./resolveServices')(parsed, composeFile)
 				.then (services)->
-					return services if not onlyActive
-					services.filter (service)-> service.id
+					services.forEach((service)-> delete service.nicename) if not options.nicename
+					services = services.filter((service)-> service.id) if options.onlyActive
+					return services
+
 
 exports.stats = (cb)->
 	Promise.resolve()
-		.then ()-> exports.services(true)
+		.then ()-> exports.services(onlyActive:true)
 		.then (services)->
 			require('./stats')(services).on 'update', (stats)-> cb?(stats)
 

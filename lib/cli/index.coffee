@@ -36,18 +36,21 @@ switch
 	
 	when isCommand('stats')
 		Promise.resolve()
-			.then ()-> require('../').services(true)
+			.then ()-> require('../').services(onlyActive:true)
 			.then (services)->
 				logUpdate = require 'log-update'
 				columns = ['NAME:name', 'ID:id', 'CPU %:cpuPercent', 'RAM %:ramPercent', 'RAM USAGE:ramUsage', 'NET:netio', 'FS:fsio', 'PIDS:pids']
 				columnWidths = [13, 14, 8, 8, 20, 20, 20, 6]
+				
 				require('../stats')(services).on 'update', (stats)->
 					return console.log(JSON.stringify stats) if args.json
 					stats.forEach (stat)-> stat.name = if stat.online then chalk.green(stat.name) else chalk.yellow(stat.name)
+					
 					if args.a or args.all
 						stats = require('sugar/array/sortBy')(stats, 'online', true)
 					else
 						stats = stats.filter((stat)-> stat.online)
+					
 					logUpdate table(stats, columns, columnWidths)
 	
 	else

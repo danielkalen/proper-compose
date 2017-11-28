@@ -33,7 +33,7 @@ suite "proper-compose", ()->
 		test "standard", ()->
 			process.env.COMPOSE_DIR = "#{TEMP}/standard"
 			Promise.resolve()
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'standard_abc_1'
@@ -48,7 +48,7 @@ suite "proper-compose", ()->
 		test "directory-style", ()->
 			process.env.COMPOSE_DIR = "#{TEMP}/dir"
 			Promise.resolve()
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'dir_abc_1'
@@ -88,7 +88,7 @@ suite "proper-compose", ()->
 		test "standard", ()->
 			process.env.COMPOSE_DIR = "#{TEMP}/imports"
 			Promise.resolve()
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'imports_abc_1'
@@ -121,7 +121,7 @@ suite "proper-compose", ()->
 		test "should omit disabled services", ()->
 			process.env.COMPOSE_DIR = "#{TEMP}/disabled"
 			Promise.resolve()
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'disabled_abc_1'
@@ -156,7 +156,7 @@ suite "proper-compose", ()->
 			process.env.NODE_ENV = 'development'
 			
 			Promise.resolve()
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'production_abc_1'
@@ -174,7 +174,7 @@ suite "proper-compose", ()->
 			process.env.NODE_ENV = 'production'
 			
 			Promise.resolve()
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'production_def_1'
@@ -239,7 +239,7 @@ suite "proper-compose", ()->
 		test "should evaluate any expressions inside double curly braces {{}}", ()->
 			process.env.COMPOSE_DIR = "#{TEMP}/eval1"
 			Promise.resolve()
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'eval1_abc_1'
@@ -251,7 +251,7 @@ suite "proper-compose", ()->
 		test "env vars inside expressions can be accessed via $VAR syntax", ()->
 			process.env.COMPOSE_DIR = "#{TEMP}/eval2"
 			Promise.resolve()
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'eval2_abc_1'
@@ -261,7 +261,7 @@ suite "proper-compose", ()->
 				.then ()->
 					process.env.IMAGE = 'customImage'
 					process.env.META = 'custom-meta'
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'eval2_abc_1'
@@ -274,7 +274,7 @@ suite "proper-compose", ()->
 			process.env.COMPOSE_DIR = "#{TEMP}/eval3"
 			process.env.IMAGE = 'customImage'
 			Promise.resolve()
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'eval3_abc_1'
@@ -286,7 +286,7 @@ suite "proper-compose", ()->
 		test "can be mixed with imports", ()->
 			process.env.COMPOSE_DIR = "#{TEMP}/eval4"
 			Promise.resolve()
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'eval4_abc_1'
@@ -294,7 +294,7 @@ suite "proper-compose", ()->
 						config: {image:'abc'}
 					]
 				.then ()-> process.env.INCLUDE_EXTRA = true
-				.then ()-> compose.services()
+				.then ()-> compose.services(nicename:false)
 				.then (result)->
 					expect(result).to.eql [
 						name: 'eval4_abc_1'
