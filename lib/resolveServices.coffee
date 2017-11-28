@@ -7,7 +7,7 @@ module.exports = (data, composeFile)->
 	serviceNames = Object.keys(data.services)
 	containers = null
 	
-	Promise.resolve()
+	Promise.resolve({query:all:true})
 		.then docker.containers
 		.then (result)-> containers = result
 		.return Object.keys(data.services)
