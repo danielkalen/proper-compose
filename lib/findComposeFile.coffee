@@ -2,7 +2,7 @@ Promise = require 'bluebird'
 fs = require 'fs-jetpack'
 Path = require 'path'
 
-resolveComposeFile = (cwd)->
+resolveComposeFile = (cwd, throwUnfound=true)->
 	cwd ?= process.env.COMPOSE_DIR or process.cwd()
 	
 	Promise.resolve()
@@ -15,7 +15,10 @@ resolveComposeFile = (cwd)->
 			if (nextDir = Path.dirname(cwd)) is cwd # '/'
 				return {found:false}
 			else
-				return resolveComposeFile(nextDir)
+				return resolveComposeFile(nextDir, throwUnfound)
+
+		.tap ({found})-> if not found and throwUnfound
+			throw new Error "compose file not found"
 
 
 matchComposeFile = (listing, cwd)->

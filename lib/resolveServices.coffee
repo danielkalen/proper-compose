@@ -12,10 +12,11 @@ module.exports = (data, composeFile)->
 		.then (result)-> containers = result
 		.return Object.keys(data.services)
 		.map (name)->
+			nicename = name
 			config = data.services[name]
 			name = config.container_name or "#{basename}_#{name}"
 			{name, id} = resolveContainer(name, config, containers)
-			return {name, id, config}
+			return {name, nicename, id, config}
 
 
 resolveBasename = (composeFile)->
