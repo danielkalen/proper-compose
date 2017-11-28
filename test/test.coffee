@@ -126,7 +126,7 @@ suite "proper-compose", ()->
 					expect(result).to.eql [
 						name: 'disabled_abc_1'
 						id: undefined
-						config: {image:'abc', disabled:false}
+						config: {image:'abc'}
 					,
 						name: 'disabled_ghi_1'
 						id: undefined
@@ -161,7 +161,7 @@ suite "proper-compose", ()->
 					expect(result).to.eql [
 						name: 'production_abc_1'
 						id: undefined
-						config: {image:'abc', production:false}
+						config: {image:'abc'}
 					,
 						name: 'production_ghi_1'
 						id: undefined
@@ -179,7 +179,7 @@ suite "proper-compose", ()->
 					expect(result).to.eql [
 						name: 'production_def_1'
 						id: undefined
-						config: {image:'def', production:true}
+						config: {image:'def'}
 					,
 						name: 'production_ghi_1'
 						id: undefined
@@ -226,6 +226,7 @@ suite "proper-compose", ()->
 				"""
 				'eval4/docker-compose/extra.yml': """
 					extra:
+						image: {{$INCLUDE_EXTRA ? 'abc' : 'ABC'}}
 						meta: 'ABC'
 				"""
 				'eval4/docker-compose/def.yml': """
@@ -298,7 +299,7 @@ suite "proper-compose", ()->
 					expect(result).to.eql [
 						name: 'eval4_abc_1'
 						id: undefined
-						config: {image:'abc', extra:meta:'ABC'}
+						config: {image:'abc', extra:{image:'abc', meta:'ABC'}}
 					,
 						name: 'eval4_def_1'
 						id: undefined

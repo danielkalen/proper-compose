@@ -14,7 +14,7 @@ resolveExpressions = (content, composeFile)->
 		expression = expression.replace ENV_VAR_REGEX, (e, variable)-> "env.#{variable}"
 		result = runExpression(expression, meta)
 		result = if result is undefined then '' else result
-		result = indentString(result,1,whitespace) if typeof result is 'string'
+		result = indentString(result,1,whitespace) if typeof result is 'string' and whitespace.length
 		return result
 
 

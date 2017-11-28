@@ -12,6 +12,9 @@ resolveFlags = (data)->
 		if config.disabled
 			return delete data.services[name]
 
+		delete config.production
+		delete config.disabled
+
 	return data
 
 
