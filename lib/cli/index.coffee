@@ -40,7 +40,7 @@ switch
 			.then (services)->
 				logUpdate = require 'log-update'
 				columns = ['NAME:name', 'ID:id', 'CPU %:cpuPercent', 'RAM %:ramPercent', 'RAM USAGE:ramUsage', 'NET:netio', 'FS:fsio', 'PIDS:pids']
-				columnWidths = [15, 14, 8, 8, 20, 20, 20, 6]
+				columnWidths = [16, 14, 8, 8, 20, 20, 20, 6]
 				if args.simple or args.s
 					removeColumn(columns, columnWidths, 1, 6, 7)
 				
