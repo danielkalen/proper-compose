@@ -10,14 +10,14 @@ isCommand = (target)-> switch target
 		((args._[0] is 'help') and args._.length is 1) or
 		(Object.keys(args).length is 1 and args._.length is 0)
 
-	when 'services'
-		args._.includes 'services'
-	
-	when 'stats'
-		args._.includes 'stats'
+	else args._[0] is target
 
-	else false
-		
+removeColumn = (columns, widths, indices...)->
+	removeAt = require 'sugar/array/removeAt'
+	for index in indices.reverse()
+		removeAt columns, index
+		removeAt widths, index
+
 
 switch
 	when isCommand('help')
@@ -41,6 +41,8 @@ switch
 				logUpdate = require 'log-update'
 				columns = ['NAME:name', 'ID:id', 'CPU %:cpuPercent', 'RAM %:ramPercent', 'RAM USAGE:ramUsage', 'NET:netio', 'FS:fsio', 'PIDS:pids']
 				columnWidths = [13, 14, 8, 8, 20, 20, 20, 6]
+				if args.simple or args.s
+					removeColumn(columns, columnWidths, 1, 6, 7)
 				
 				require('../stats')(services).on 'update', (stats)->
 					return console.log(JSON.stringify stats) if args.json
