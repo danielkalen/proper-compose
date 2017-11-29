@@ -14,14 +14,15 @@ class StatsWatcher extends EventEmitter
 	formatData: (data)->
 		output = Object.create(null)
 		output.id = @id.slice(0,12)
-		output.name = @config.nicename
+		output.name = @config.name
+		output.nicename = @config.nicename
 		output.online = data.pids_stats.current?
 		output.cpuPercent = cpuPercent(data)
 		output.ramPercent = ramPercent(data)
 		output.ramUsage = ramUsage(data)
 		output.netio = netio(data)
 		output.fsio = fsio(data)
-		output.pids = data.pids_stats.current
+		output.pids = data.pids_stats.current or 0
 		return output
 
 

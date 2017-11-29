@@ -12,11 +12,6 @@ isCommand = (target)-> switch target
 
 	else args._[0] is target
 
-removeColumn = (columns, widths, indices...)->
-	removeAt = require 'sugar/array/removeAt'
-	for index in indices.reverse()
-		removeAt columns, index
-		removeAt widths, index
 
 
 switch
@@ -39,20 +34,21 @@ switch
 			.then ()-> require('../').services(onlyActive:true)
 			.then (services)->
 				logUpdate = require 'log-update'
-				columns = ['NAME:name', 'ID:id', 'CPU %:cpuPercent', 'RAM %:ramPercent', 'RAM USAGE:ramUsage', 'NET:netio', 'FS:fsio', 'PIDS:pids']
+				columns = ['NAME:nicename', 'ID:id', 'CPU %:cpuPercent', 'RAM %:ramPercent', 'RAM USAGE:ramUsage', 'NET:netio', 'FS:fsio', 'PIDS:pids']
 				columnWidths = [16, 14, 8, 8, 20, 20, 20, 6]
 				if args.simple or args.s
-					removeColumn(columns, columnWidths, 1, 6, 7)
+					table.removeColumn(columns, columnWidths, 1, 6, 7)
 				
 				require('../stats')(services).on 'update', (stats)->
 					return console.log(JSON.stringify stats) if args.json
-					stats.forEach (stat)-> stat.name = if stat.online then chalk.green(stat.name) else chalk.yellow(stat.name)
+					stats.forEach (stat)->
+						stat.rawname ?= stat.nicename
+						stat.nicename = if stat.online then chalk.green(stat.nicename) else chalk.yellow(stat.nicename)
 					
-					if args.a or args.all
-						stats = require('sugar/array/sortBy')(stats, 'online', true)
-					else
+					unless args.a or args.all
 						stats = stats.filter((stat)-> stat.online)
 					
+					stats = require('sugar/array/sortBy')(stats, 'name')
 					logUpdate table(stats, columns, columnWidths)
 	
 	else
