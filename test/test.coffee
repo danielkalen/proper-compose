@@ -11,9 +11,14 @@ suite "proper-compose", ()->
 	suiteTeardown ()->
 		fs.remove TEMP
 	suiteSetup ()->
+		@NODE_ENV = process.env.NODE_ENV
+		@ALLOWED = process.env.ALLOWED
 		process.env.COMPOSE_DIR = TEMP
 		process.env.NO_MEMOIZE = TEMP
 		fs.dir TEMP, empty:true
+	teardown ()->
+		process.env.NODE_ENV = @NODE_ENV
+		process.env.ALLOWED = @ALLOWED
 
 
 	suite "file type support", ()->
@@ -116,7 +121,7 @@ suite "proper-compose", ()->
 						ghi:
 							image: ghi
 				"""
-		
+
 
 		test "should omit disabled services", ()->
 			process.env.COMPOSE_DIR = "#{TEMP}/disabled"
@@ -127,6 +132,27 @@ suite "proper-compose", ()->
 						name: 'disabled_abc_1'
 						id: undefined
 						config: {image:'abc'}
+					,
+						name: 'disabled_ghi_1'
+						id: undefined
+						config: {image:'ghi'}
+					]
+
+
+		test "should not omit services that are specified in the ALLOWED env var", ()->
+			process.env.COMPOSE_DIR = "#{TEMP}/disabled"
+			process.env.ALLOWED = 'def'
+			Promise.resolve()
+				.then ()-> compose.services(nicename:false)
+				.then (result)->
+					expect(result).to.eql [
+						name: 'disabled_abc_1'
+						id: undefined
+						config: {image:'abc'}
+					,
+						name: 'disabled_def_1'
+						id: undefined
+						config: {image:'def'}
 					,
 						name: 'disabled_ghi_1'
 						id: undefined
@@ -149,7 +175,6 @@ suite "proper-compose", ()->
 						ghi:
 							image: ghi
 				"""
-
 
 		test "should omit services with 'true' production flags when in development", ()->
 			process.env.COMPOSE_DIR = "#{TEMP}/production"
@@ -185,6 +210,39 @@ suite "proper-compose", ()->
 						id: undefined
 						config: {image:'ghi'}
 					]
+
+		suite "should not omit services in either case that are specified in the ALLOWED env var", ()->
+			suiteSetup ()->
+				@expected = [
+					name: 'production_abc_1'
+					id: undefined
+					config: {image:'abc'}
+				,
+					name: 'production_def_1'
+					id: undefined
+					config: {image:'def'}
+				,
+					name: 'production_ghi_1'
+					id: undefined
+					config: {image:'ghi'}
+				]
+			
+			test "in development", ()->
+				process.env.NODE_ENV = 'development'
+				process.env.ALLOWED = 'def, ghi'
+				
+				Promise.resolve()
+					.then ()-> compose.services(nicename:false)
+					.then (result)=> expect(result).to.eql @expected
+			
+			test "in production", ()->
+				process.env.NODE_ENV = 'production'
+				process.env.ALLOWED = 'abc'
+				
+				Promise.resolve()
+					.then ()-> compose.services(nicename:false)
+					.then (result)=> expect(result).to.eql @expected
+			
 
 
 	suite "js evaluation", ()->
@@ -305,6 +363,16 @@ suite "proper-compose", ()->
 						id: undefined
 						config: {image:'def', meta:'DEF'}
 					]
+
+
+
+
+
+
+
+
+
+
 
 
 
