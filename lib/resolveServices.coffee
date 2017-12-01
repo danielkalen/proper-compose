@@ -3,7 +3,7 @@ Path = require 'path'
 docker = require 'docker-promise'
 
 module.exports = (data, composeFile)->
-	basename = resolveBasename(composeFile)
+	basename = process.env.COMPOSE_PROJECT_NAME or resolveBasename(composeFile)
 	serviceNames = Object.keys(data.services)
 	containers = null
 	
