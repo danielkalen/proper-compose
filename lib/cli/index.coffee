@@ -3,6 +3,7 @@ table = require './table'
 chalk = require 'chalk'
 args = require('minimist')(process.argv.slice(2))
 throttle = require 'sugar/function/throttle'
+logUpdate = throttle require('log-update'), 100
 
 isCommand = (target)-> switch target
 	when 'help'
@@ -36,7 +37,6 @@ switch
 		Promise.resolve()
 			.then ()-> require('../').services(onlyActive:true)
 			.then (services)->
-				logUpdate = require 'log-update'
 				columns = ['NAME:nicename', 'ID:id', 'CPU %:cpuPercent', 'RAM %:ramPercent', 'RAM USAGE:ramUsage', 'NET:netio', 'FS:fsio', 'PIDS:pids']
 				columnWidths = [16, 14, 8, 8, 20, 20, 20, 6]
 				if args.simple or args.s
