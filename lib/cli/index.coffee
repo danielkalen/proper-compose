@@ -31,6 +31,12 @@ switch
 		return require('./renderHelp')() if not args._[1]?
 		require('../').command ['exec', args._[1], 'bash']
 
+	
+	when isCommand('logs')
+		logArgs = process.argv.slice(2)
+		logArgs.splice 1, 0, '--tail=10'
+		require('../').command logArgs
+	
 
 	
 	when isCommand('stats')
