@@ -38,6 +38,15 @@ switch
 		require('../').command logArgs
 	
 
+	when isCommand('reup')
+		targets = args._.slice(1)
+		stop = if args.f or args.force then 'kill' else 'stop'
+		up = if args.d then ['up','-d'] else ['up']
+		
+		Promise.resolve()
+			.then ()-> require('../').command [stop].concat(targets)
+			.then ()-> require('../').command [up...].concat(targets)
+
 	
 	when isCommand('stats')
 		Promise.resolve()
