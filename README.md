@@ -15,6 +15,9 @@ Features:
 - extra commands/functionality
     - `proper-compose *services*` for a summary of all matching services
     - `proper-compose *stats*` for real-time service stats
+    - `proper-compose *enter*` alias for `docker-compose exec <service> bash`
+    - `proper-compose *reup*` alias for `docker-compose stop && docker-compose up`
+    - `proper-compose *logs*` will load last 10 lines by default (vs all)
 
 Note: this library is still under development stage and is being processed through heavy real-world battle testing. Full documentation will be released once this module is ready for alpha release.
 
