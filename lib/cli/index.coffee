@@ -16,9 +16,7 @@ isCommand = (target)-> switch target
 
 switch
 	when isCommand('help')
-		Promise.resolve()
-			.then ()-> require('../').command.silent ['help']
-			.then (docs)-> console.log "#{docs}\n#{require './docs'}"
+		require('./renderHelp')()
 	
 	
 	when isCommand('services')
@@ -27,6 +25,11 @@ switch
 			.then (services)->
 				if args.json then return console.dir services, colors:1, depth:99
 				console.log table(services, ['NAME:nicename', 'ID:id', 'IMAGE:config.image', 'PORTS:config.ports'], [15, 14, 20, 20])
+	
+	when isCommand('enter')
+		return require('./renderHelp')() if not args._[1]?
+		require('../').command ['exec', args._[1], 'bash']
+
 
 	
 	when isCommand('stats')
