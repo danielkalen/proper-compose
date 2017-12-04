@@ -14,8 +14,15 @@ isCommand = (target)-> switch target
 	else args._[0] is target
 
 
-
 switch
+	when args.v or args.version
+		Promise.resolve()
+			.then ()-> require('../').command.silent ['-v']
+			.then (version)-> console.log "
+				proper-compose version #{require('../../package.json').version}
+				#{version}
+			"
+	
 	when isCommand('help')
 		require('./renderHelp')()
 	
