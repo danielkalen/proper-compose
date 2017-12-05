@@ -2,11 +2,11 @@ Table = require 'cli-table'
 get = require 'sugar/object/get'
 max = require 'sugar/array/max'
 
-createTable = (data, columns, colWidths=[])->
+createTable = (data, columns, colWidths=[], aliases={})->
 	split = columns.map (column)-> column.split(':')
 	head = split.map (column)-> column[0]
 	body = split.map (column)-> column[1]
-	optimizeColumns(data, columns, colWidths)
+	optimizeColumns(data, columns, colWidths, aliases)
 	
 	table = new Table {head, colWidths}
 	for item in data
@@ -24,17 +24,29 @@ removeColumn = (columns, widths, indices...)->
 		removeAt widths, index
 	return
 
-optimizeColumns = (data, columns, colWidths)->
+optimizeColumns = (data, columns, colWidths, aliases)->
 	return if not data.length
 	for column,index in columns
 		[label,prop] = column.split(':')
-		prop = 'rawname' if prop is 'nicename'
+		prop = aliases[prop] or prop
+		values = getValues(data, prop)
 		currentWidth = colWidths[index]
-		maxItem = max(data, (p)-> (p[prop]+'').length)
-		maxWidth = (maxItem[prop]+'').length
+		maxWidth = max(values, (p)-> p.length).length
+		maxWidth = 12 if /\bid\b/i.test(prop) and maxWidth
 
 		colWidths[index] = Math.max(maxWidth+2, label.length+2)
 	return
+
+
+getValues = (data, prop)->
+	output = []
+	
+	for entry in data
+		value = get(entry, prop)
+		value ?= ''
+		output.push value+''
+
+	return output
 
 
 module.exports = createTable

@@ -61,6 +61,7 @@ switch
 			.then (services)->
 				columns = ['NAME:nicename', 'ID:id', 'CPU %:cpuPercent', 'RAM %:ramPercent', 'RAM USAGE:ramUsage', 'NET:netio', 'FS:fsio', 'PIDS:pids']
 				columnWidths = [16, 14, 8, 8, 20, 20, 20, 6]
+				columnAliases = 'nicename':'rawname'
 				if args.simple or args.s
 					table.removeColumn(columns, columnWidths, 1, 6, 7)
 				
@@ -74,7 +75,7 @@ switch
 						stats = stats.filter((stat)-> stat.online)
 					
 					stats = require('sugar/array/sortBy')(stats, 'name')
-					logUpdate table(stats, columns, columnWidths)
+					logUpdate table(stats, columns, columnWidths, columnAliases)
 	
 	else
 		require('../').command process.argv.slice(2)
