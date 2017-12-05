@@ -1,6 +1,6 @@
 {
   "name": "proper-compose",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "docker-compose wrapper supplying additional functionality",
   "main": "index.js",
   "bin": {
