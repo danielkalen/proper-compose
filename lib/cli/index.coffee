@@ -50,6 +50,18 @@ switch
 		require('../').reup args, targets...
 
 
+	when isCommand('online')
+		targets = args._.slice(1)
+		Promise.resolve(targets)
+			.map require('../').online
+			.then (statuses)->
+				if targets.length is 1
+					console.log statuses[0]
+				else
+					for status,index in statuses
+						console.log "#{targets[index]}: #{status}"
+
+
 	when isCommand('status')
 		Promise.resolve()
 			.then ()-> require('../').status(args._.slice(1)...)
