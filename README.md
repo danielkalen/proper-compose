@@ -15,6 +15,8 @@ Features:
 - extra commands/functionality
     - `proper-compose *services*` for a summary of all matching services
     - `proper-compose *stats*` for real-time service stats
+    - `proper-compose *status*` for online/offline status for given services
+    - `proper-compose *online*` for boolean indicating if a service is online
     - `proper-compose *enter*` alias for `docker-compose exec <service> bash`
     - `proper-compose *reup*` alias for `docker-compose stop && docker-compose up`
     - `proper-compose *logs*` will load last 10 lines by default (vs all)
