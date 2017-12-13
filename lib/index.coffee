@@ -26,6 +26,22 @@ exports.stats = (cb)->
 			require('./stats')(services).on 'update', (stats)-> cb?(stats)
 
 
+exports.reup = (args...)->
+	if typeof args[0] is 'object'
+		options = args[0]
+		targets = args.slice(1)
+	else
+		options = {d:true}
+		targets = args
+
+	stop = if options.f or options.force then 'kill' else 'stop'
+	up = if options.d then ['up','-d'] else ['up']
+	
+	Promise.resolve()
+		.then ()-> require('./command') [stop].concat(targets)
+		.then ()-> require('./command') [up...].concat(targets)
+
+
 exports.command = require './command'
 
 
