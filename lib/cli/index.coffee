@@ -49,7 +49,27 @@ switch
 		targets = args._.slice(1)
 		require('../').reup args, targets...
 
+
+	when isCommand('status')
+		Promise.resolve()
+			.then ()-> require('../').status(args._.slice(1)...)
+			.then (statuses)->
+				if args.json then return console.dir statuses, colors:1, depth:99
+				columns = ['NAME:name', 'STATUS:status', 'SINCE:duration.label', 'NOTES:notes']
+				columnAliases = 'name':'rawname'
+				statuses.forEach (status)->
+					status.rawname = status.name
+					status.name = switch status.status
+						when 'online' then chalk.green(status.name)
+						when 'paused' then chalk.yellow(status.name)
+						when 'offline' then chalk.red(status.name)
+					status.notes = switch
+						when status.pending then 'restarting'
+						when status.error then "(#{status.error.code}) #{status.error.message}"
+
+				console.log table(statuses, columns, [], columnAliases)
 	
+
 	when isCommand('stats')
 		Promise.resolve()
 			.then ()-> require('../').services(onlyActive:true)

@@ -5,4 +5,5 @@ Extra Commands:
   services           Resolve service container data
   enter              Enter service via a new bash shell
   reup 	             Shortcut for 'stop/kill' & 'up'
+  status             View online/offline status for services
 """
