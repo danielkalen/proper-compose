@@ -1,13 +1,13 @@
 Promise = require('bluebird').config(warnings:false, longStackTraces:false)
 table = require './table'
 chalk = require 'chalk'
-args = require('minimist')(process.argv.slice(2))
+args = require './programArgs'
 throttle = require 'sugar/function/throttle'
 logUpdate = throttle require('log-update'), 100
 
 isCommand = (target)-> switch target
 	when 'help'
-		((args.help or args.h) and args._.length is 0) or
+		((args.help) and args._.length is 0) or
 		((args._[0] is 'help') and args._.length is 1) or
 		(Object.keys(args).length is 1 and args._.length is 0)
 
@@ -15,7 +15,7 @@ isCommand = (target)-> switch target
 
 
 switch
-	when args.v or args.version
+	when args.version
 		Promise.resolve()
 			.then ()-> require('../').command.silent ['-v']
 			.then (version)-> console.log "
@@ -57,7 +57,7 @@ switch
 				columns = ['NAME:nicename', 'ID:id', 'CPU %:cpuPercent', 'RAM %:ramPercent', 'RAM USAGE:ramUsage', 'NET:netio', 'FS:fsio', 'PIDS:pids']
 				columnWidths = [16, 14, 8, 8, 20, 20, 20, 6]
 				columnAliases = 'nicename':'rawname'
-				if args.simple or args.s
+				if args.simple
 					table.removeColumn(columns, columnWidths, 1, 6, 7)
 				
 				require('../stats')(services).on 'update', (stats)->
@@ -66,7 +66,7 @@ switch
 						stat.rawname ?= stat.nicename
 						stat.nicename = if stat.online then chalk.green(stat.nicename) else chalk.yellow(stat.nicename)
 					
-					unless args.a or args.all
+					unless args.all
 						stats = stats.filter((stat)-> stat.online)
 					
 					stats = require('sugar/array/sortBy')(stats, 'name')
@@ -74,3 +74,14 @@ switch
 	
 	else
 		require('../').command process.argv.slice(2)
+
+
+
+
+
+
+
+
+
+
+

@@ -13,10 +13,7 @@ exports.services = (options={})->
 			Promise.resolve(composeFile)
 				.then require './parseComposeFile'
 				.then (parsed)-> require('./resolveServices')(parsed, composeFile)
-				.then (services)->
-					services.forEach((service)-> delete service.nicename) if not options.nicename
-					services = services.filter((service)-> service.id) if options.onlyActive
-					return services
+				.then (services)-> require('./filterServices')(services, options)
 
 
 exports.stats = (cb)->
@@ -34,12 +31,19 @@ exports.reup = (args...)->
 		options = {d:true}
 		targets = args
 
-	stop = if options.f or options.force then 'kill' else 'stop'
-	up = if options.d then ['up','-d'] else ['up']
+	stop = if options.force then 'kill' else 'stop'
+	up = if options.daemon or options.silent then ['up','-d'] else ['up']
+	command = if options.silent then exports.command.silent else exports.command
 	
 	Promise.resolve()
-		.then ()-> require('./command') [stop].concat(targets)
-		.then ()-> require('./command') [up...].concat(targets)
+		.then ()-> command [stop].concat(targets)
+		.then ()-> command [up...].concat(targets)
+
+
+exports.status = (targets...)->
+	Promise.resolve()
+		.then ()-> exports.services({targets})
+		.map (service)-> require('./getState')(service.id, service.nicename)
 
 
 exports.command = require './command'
