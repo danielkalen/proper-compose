@@ -46,6 +46,12 @@ exports.status = (targets...)->
 		.map (service)-> require('./getState')(service.id, service.nicename)
 
 
+exports.online = (target)->
+	Promise.resolve()
+		.then ()-> exports.status(target)
+		.then (result)-> result[0].status is 'online'
+
+
 exports.command = require './command'
 
 
