@@ -46,6 +46,8 @@ switch
 	
 
 	when isCommand('reup')
+		if args._.length is 1 and Object.keys(args).length > 1
+			return console.error "no services provided"
 		targets = args._.slice(1)
 		require('../').reup args, targets...
 
