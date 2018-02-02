@@ -41,7 +41,7 @@ switch
 	
 	when isCommand('logs')
 		logArgs = process.argv.slice(2)
-		logArgs.splice 1, 0, '--tail=10'
+		logArgs.splice 1, 0, '--tail=10' unless args.tail?
 		require('../').command logArgs
 	
 
