@@ -1,6 +1,5 @@
 # proper-compose
 [![Build Status](https://travis-ci.org/danielkalen/proper-compose.svg?branch=master)](https://travis-ci.org/danielkalen/proper-compose)
-[![Code Climate](https://codeclimate.com/github/danielkalen/proper-compose/badges/gpa.svg)](https://codeclimate.com/github/danielkalen/proper-compose)
 [![NPM](https://img.shields.io/npm/v/proper-compose.svg)](https://npmjs.com/package/proper-compose)
 
 Features:
