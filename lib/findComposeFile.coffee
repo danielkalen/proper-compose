@@ -29,9 +29,9 @@ matchComposeFile = (listing, cwd)->
 		return
 
 	composeFile = Path.join(cwd, 'docker-compose', 'index.yml')
-	Promise.resolve()
-		.then ()-> fs.existsAsync(composeFile)
-		.then (exists)-> return composeFile if exists
+
+	if fs.exists(composeFile)
+		return composeFile
 
 
 
