@@ -6,7 +6,7 @@ formatNumber = require 'sugar/number/format'
 
 class StatsWatcher extends EventEmitter
 	constructor: (@config)->
-		super
+		super()
 		@id = @config.id
 		docker.stats @id, (data)=>
 			@emit 'update', @formatData(data)
